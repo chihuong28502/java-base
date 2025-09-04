@@ -1,0 +1,25 @@
+server:
+  shutdown: graceful
+  port: 8000
+spring:
+  application:
+    name: java-api
+  datasource:
+    url: jdbc:mysql://${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connectionTimeout: 30000
+      maximumPoolSize: 10
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+application:
+  security:
+    jwt:
+      secretAccessToken: ${JWT_SECRET_ACCESS}
+      secretRefreshToken: ${JWT_SECRET_REFRESH}
+      expirationAccessToken: ${JWT_EXPIRATION:30}
+      expirationRefreshToken: ${JWT_EXPIRATION_REFRESH:43200}
