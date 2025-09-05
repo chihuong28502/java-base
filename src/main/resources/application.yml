@@ -15,6 +15,11 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+  messages:
+    basename: messages
+    encoding: UTF-8
+    cache-duration: 3600s
+    use-code-as-default-message: true
 
 application:
   security:

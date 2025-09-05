@@ -15,6 +15,7 @@ import com.example.java_api.auth.dto.request.RegisterRequest;
 import com.example.java_api.auth.dto.response.LoginResponse;
 import com.example.java_api.auth.dto.response.RefreshTokenReponse;
 import com.example.java_api.auth.dto.response.RegisterResponse;
+import com.example.java_api.common.context.MessageContext;
 import com.example.java_api.common.exeptions.exeptionMulti.AuthenticationException;
 import com.example.java_api.common.exeptions.exeptionMulti.NotFoundException;
 import com.example.java_api.cookies.CookieService;
@@ -54,16 +55,16 @@ public class AuthController {
   public RefreshTokenReponse refreshToken(HttpServletRequest request, HttpServletResponse response) {
     Cookie[] cookies = request.getCookies();
     if (cookies == null)
-      throw new NotFoundException("Refresh token not found");
+      throw new NotFoundException(MessageContext.getMessage("auth.token.notfound"));
 
     String refreshToken = Arrays.stream(cookies)
         .filter(cookie -> "refreshToken".equals(cookie.getName()))
         .map(Cookie::getValue)
         .findFirst()
-        .orElseThrow(() -> new NotFoundException("Refresh token not found"));
+        .orElseThrow(() -> new NotFoundException(MessageContext.getMessage("auth.token.notfound")));
     if (!jwtTokenProvider.validateRefreshToken(refreshToken)) {
       cookieService.clearRefreshTokenCookie(response); // xoá luôn cookie cũ
-      throw new AuthenticationException("Refresh token is invalid or expired");
+      throw new AuthenticationException(MessageContext.getMessage("auth.token.invalid"));
     }
     String userId = jwtTokenProvider.getUserIdFromJWT(refreshToken);
     User user = userService.getById(userId);

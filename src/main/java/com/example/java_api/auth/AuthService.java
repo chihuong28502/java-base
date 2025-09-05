@@ -29,7 +29,7 @@ public class AuthService {
   @Transactional
   public RegisterResponse register(RegisterRequest request) {
     if (userRepository.existsByEmail(request.getEmail())) {
-      throw new ConflictException("Email đã được sử dụng");
+      throw new ConflictException(MessageContext.getMessage("auth.user.already.exists"));
     }
 
     User user = new User();
@@ -38,21 +38,21 @@ public class AuthService {
     user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
 
     User saved = userRepository.save(user);
-    MessageContext.setMessage("Register successful");
+    MessageContext.setMessage(MessageContext.getMessage("auth.register.success"));
     return new RegisterResponse(saved.getId(), saved.getFullName(), saved.getEmail());
   }
 
   public LoginResponse login(LoginRequest request) {
     User user = userRepository.findByEmail(request.getEmail().toLowerCase())
-        .orElseThrow(() -> new NotFoundException("Email không tồn tại!"));
+        .orElseThrow(() -> new NotFoundException(MessageContext.getMessage("auth.user.not.found")));
 
     if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
-      throw new AuthenticationException("Email hoặc mật khẩu không đúng");
+      throw new AuthenticationException(MessageContext.getMessage("auth.invalid.credentials"));
     }
 
     String token = jwtTokenProvider.generateAccessToken(user);
     String refreshToken = jwtTokenProvider.generateRefreshToken(user);
-    MessageContext.setMessage("Đăng nhập thành công");
+    MessageContext.setMessage(MessageContext.getMessage("auth.login.success"));
     return new LoginResponse(token, refreshToken, user);
   }
 }
