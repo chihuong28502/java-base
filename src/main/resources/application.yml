@@ -23,3 +23,5 @@ application:
       secretRefreshToken: ${JWT_SECRET_REFRESH}
       expirationAccessToken: ${JWT_EXPIRATION:30}
       expirationRefreshToken: ${JWT_EXPIRATION_REFRESH:43200}
+    environment:
+      nodeEnv: ${NODE_ENV}
