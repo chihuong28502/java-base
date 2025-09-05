@@ -44,7 +44,7 @@ public class ApiResponseBodyAdvice implements ResponseBodyAdvice<Object> {
       return new ApiResponse<>(body, message);
     }
 
-    // Default: message "Success"
-    return new ApiResponse<>(body, "Success");
+    // Default: message from i18n key "success"
+    return new ApiResponse<>(body, MessageContext.getMessage("success"));
   }
 }

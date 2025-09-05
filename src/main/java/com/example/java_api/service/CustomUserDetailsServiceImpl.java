@@ -23,7 +23,7 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
         com.example.java_api.models.User user = userRepository.findByEmail(usernameOrEmail)
-            .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + usernameOrEmail));
+            .orElseThrow(() -> new UsernameNotFoundException("user.not.found"));
 
         GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_USER");
         return new User(user.getEmail(), user.getPasswordHash(), Collections.singleton(authority));
@@ -32,7 +32,7 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
     @Override
     public UserDetails loadUserById(String id) {
         com.example.java_api.models.User user = userRepository.findById(id)
-            .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + id));
+            .orElseThrow(() -> new UsernameNotFoundException("user.not.found"));
 
         GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_USER");
         return new User(user.getEmail(), user.getPasswordHash(), Collections.singleton(authority));

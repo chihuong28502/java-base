@@ -55,13 +55,13 @@ public class AuthController {
   public RefreshTokenReponse refreshToken(HttpServletRequest request, HttpServletResponse response) {
     Cookie[] cookies = request.getCookies();
     if (cookies == null)
-      throw new NotFoundException(MessageContext.getMessage("auth.token.notfound"));
+      throw new NotFoundException(MessageContext.getMessage("auth.token.not.found"));
 
     String refreshToken = Arrays.stream(cookies)
         .filter(cookie -> "refreshToken".equals(cookie.getName()))
         .map(Cookie::getValue)
         .findFirst()
-        .orElseThrow(() -> new NotFoundException(MessageContext.getMessage("auth.token.notfound")));
+        .orElseThrow(() -> new NotFoundException(MessageContext.getMessage("auth.token.not.found")));
     if (!jwtTokenProvider.validateRefreshToken(refreshToken)) {
       cookieService.clearRefreshTokenCookie(response); // xoá luôn cookie cũ
       throw new AuthenticationException(MessageContext.getMessage("auth.token.invalid"));

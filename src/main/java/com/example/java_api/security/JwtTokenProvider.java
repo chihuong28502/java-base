@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import com.example.java_api.common.context.MessageContext;
 import com.example.java_api.configuration.getenv.JWTConfiguration;
 import com.example.java_api.models.User;
 
@@ -46,7 +47,6 @@ public class JwtTokenProvider {
         .compact();
   }
 
-
   public String generateRefreshToken(User user) {
     Date now = new Date();
     long expirationInMs = jwtConfiguration.getExpirationRefreshToken();
@@ -78,24 +78,28 @@ public class JwtTokenProvider {
       Jwts.parser().verifyWith(key).build().parseSignedClaims(authToken);
       return true;
     } catch (SignatureException ex) {
-      LOGGER.error("Invalid JWT signature");
-      request.setAttribute("jwt_error", "Chữ ký JWT không hợp lệ");
+      String message = MessageContext.getMessage("security.jwt.token.invalid");
+      LOGGER.error(message);
+      request.setAttribute("jwt_error", message);
     } catch (MalformedJwtException ex) {
-      LOGGER.error("Invalid JWT token");
-      request.setAttribute("jwt_error", "Token không hợp lệ");
+      String message = MessageContext.getMessage("security.jwt.token.invalid");
+      LOGGER.error(message);
+      request.setAttribute("jwt_error", message);
     } catch (ExpiredJwtException ex) {
-      LOGGER.error("Expired JWT token");
-      request.setAttribute("jwt_error", "Token hết hạn");
+      String message = MessageContext.getMessage("security.jwt.token.expired");
+      LOGGER.error(message);
+      request.setAttribute("jwt_error", message);
     } catch (UnsupportedJwtException ex) {
-      LOGGER.error("Unsupported JWT token");
-      request.setAttribute("jwt_error", "Token không hợp lệ");
+      String message = MessageContext.getMessage("security.jwt.token.unsupported");
+      LOGGER.error(message);
+      request.setAttribute("jwt_error", message);
     } catch (IllegalArgumentException ex) {
-      LOGGER.error("JWT claims string is empty");
-      request.setAttribute("jwt_error", "Token không hợp lệ");
+      String message = MessageContext.getMessage("security.jwt.token.empty");
+      LOGGER.error(message);
+      request.setAttribute("jwt_error", message);
     }
     return false;
   }
-
 
   public boolean validateRefreshToken(String authToken) {
     try {
@@ -103,15 +107,20 @@ public class JwtTokenProvider {
       Jwts.parser().verifyWith(key).build().parseSignedClaims(authToken);
       return true;
     } catch (SignatureException ex) {
-      LOGGER.error("Invalid JWT signature");
+      String message = MessageContext.getMessage("security.jwt.token.invalid");
+      LOGGER.error(message);
     } catch (MalformedJwtException ex) {
-      LOGGER.error("Invalid JWT token");
+      String message = MessageContext.getMessage("security.jwt.token.invalid");
+      LOGGER.error(message);
     } catch (ExpiredJwtException ex) {
-      LOGGER.error("Expired JWT token");
+      String message = MessageContext.getMessage("security.jwt.token.expired");
+      LOGGER.error(message);
     } catch (UnsupportedJwtException ex) {
-      LOGGER.error("Unsupported JWT token");
+      String message = MessageContext.getMessage("security.jwt.token.unsupported");
+      LOGGER.error(message);
     } catch (IllegalArgumentException ex) {
-      LOGGER.error("JWT claims string is empty");
+      String message = MessageContext.getMessage("security.jwt.token.empty");
+      LOGGER.error(message);
     }
     return false;
   }

@@ -28,9 +28,8 @@ public class AuthService {
 
   @Transactional
   public RegisterResponse register(RegisterRequest request) {
-    if (userRepository.existsByEmail(request.getEmail())) {
+    if (userRepository.existsByEmail(request.getEmail()))
       throw new ConflictException(MessageContext.getMessage("auth.user.already.exists"));
-    }
 
     User user = new User();
     user.setFullName(request.getFullName());
@@ -46,9 +45,8 @@ public class AuthService {
     User user = userRepository.findByEmail(request.getEmail().toLowerCase())
         .orElseThrow(() -> new NotFoundException(MessageContext.getMessage("auth.user.not.found")));
 
-    if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
+    if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash()))
       throw new AuthenticationException(MessageContext.getMessage("auth.invalid.credentials"));
-    }
 
     String token = jwtTokenProvider.generateAccessToken(user);
     String refreshToken = jwtTokenProvider.generateRefreshToken(user);
